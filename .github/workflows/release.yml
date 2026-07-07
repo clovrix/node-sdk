@@ -1,0 +1,33 @@
+name: release
+
+# Tag-driven release to npm (@clovrix/sdk) via OIDC trusted publishing.
+# Push a `vX.Y.Z` tag to publish. No long-lived tokens: npm authenticates with
+# short-lived GitHub OIDC credentials, which is why the job needs id-token: write.
+#
+# NOTE: the npm trusted publisher must be configured for clovrix/node-sdk +
+# this workflow file (.github/workflows/release.yml) before the first publish.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC token for npm trusted publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # trusted publishing needs Node >= 22.14
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install -g npm@latest # trusted publishing needs npm >= 11.5.1
+      - run: npm ci
+      - run: npm run build
+      # No NODE_AUTH_TOKEN: with a trusted publisher configured, npm authenticates
+      # via OIDC. Scoped packages must be published with --access public.
+      - run: npm publish --access public --provenance

@@ -1,0 +1,10 @@
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
