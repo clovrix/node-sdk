@@ -1,6 +1,6 @@
 {
   "name": "@clovrix/sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Official Node.js/TypeScript SDK for the Clovrix Public API",
   "license": "MIT",
   "homepage": "https://github.com/clovrix/node-sdk",
